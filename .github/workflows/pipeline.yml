@@ -34,5 +34,5 @@ jobs:
           poetry run mypy -p dccsrv
       - name: test
         run: |
-          poetry run coverage run -m --source=dccsrv unittest
+          poetry run coverage run -m --source=dccsrv pytest tests
           poetry run coverage report

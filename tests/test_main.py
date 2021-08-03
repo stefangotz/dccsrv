@@ -15,9 +15,14 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with dccsrv. If not, see <https://www.gnu.org/licenses/>.
 
-from unittest import TestCase
+from fastapi.testclient import TestClient
+
+from dccsrv.main import app
+
+client = TestClient(app)
 
 
-class TestMain(TestCase):
-    def test_main(self):
-        assert self is not None
+def test_read_main():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {"Hello": "World"}

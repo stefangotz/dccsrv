@@ -15,22 +15,25 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with dccsrv. If not, see <https://www.gnu.org/licenses/>.
 
-"""A REST API server for Dungeon Crawl Classics characters"""
-
-from typing import Optional
-
 from fastapi import FastAPI
 
-app = FastAPI()
+from dccsrv.config import Settings
+
+_CFG = Settings()
+
+app = FastAPI(
+    title=_CFG.project_name,
+    description=_CFG.project_description,
+    version=_CFG.project_version,
+    cfg=_CFG,
+)
 
 
 @app.get("/")
-def read_root():
-    """Get API root to say Hello World"""
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, query: Optional[str] = None):
-    """Get a fictitious item by ID"""
-    return {"item_id": item_id, "q": query}
+def get_root():
+    return {
+        "name": app.extra["cfg"].project_name,
+        "description": app.extra["cfg"].project_description,
+        "version": app.extra["cfg"].project_version,
+        "license": app.extra["cfg"].project_license,
+    }

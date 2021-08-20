@@ -23,12 +23,10 @@ client = TestClient(app)
 
 
 def test_read_main():
-    response = client.get("/")
+    response = client.get("/v0/characters")
     assert response.status_code == 200
     assert response.json() == {
-        "name": app.extra["cfg"].project_name,
-        "description": app.extra["cfg"].project_description,
-        "license": app.extra["cfg"].project_license,
-        "version": app.extra["cfg"].project_version,
-        "apiVersions": app.extra["cfg"].api_versions,
+        "name": "Mediocre Mel",
+        "user": "Misha",
+        "init": 0,
     }

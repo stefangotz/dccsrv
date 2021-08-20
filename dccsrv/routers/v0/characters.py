@@ -15,20 +15,20 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with dccsrv. If not, see <https://www.gnu.org/licenses/>.
 
-from fastapi.testclient import TestClient
+from typing import Optional
 
-from dccsrv.main import app
+from fastapi import APIRouter, Depends
 
-client = TestClient(app)
+router = APIRouter(prefix="/v0/characters")
 
 
-def test_read_main():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {
-        "name": app.extra["cfg"].project_name,
-        "description": app.extra["cfg"].project_description,
-        "license": app.extra["cfg"].project_license,
-        "version": app.extra["cfg"].project_version,
-        "apiVersions": app.extra["cfg"].api_versions,
-    }
+_FIXED_CHARACTER = {
+    "name": "Mediocre Mel",
+    "user": "Misha",
+    "init": 0,
+}
+
+
+@router.get("/")
+def get_characters(_: Optional[str] = None):
+    return _FIXED_CHARACTER

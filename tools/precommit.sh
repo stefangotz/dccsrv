@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Copyright 2021 Stefan Götz <github.nooneelse@spamgourmet.com>
 
 # This file is part of dccsrv.
@@ -15,20 +17,8 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with dccsrv. If not, see <https://www.gnu.org/licenses/>.
 
-from fastapi.testclient import TestClient
+set -ue
 
-from dccsrv.main import app
+cd "$(dirname "$(realpath "${0}")")"/..
 
-client = TestClient(app)
-
-
-def test_read_main():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {
-        "name": app.extra["cfg"].project_name,
-        "description": app.extra["cfg"].project_description,
-        "license": app.extra["cfg"].project_license,
-        "version": app.extra["cfg"].project_version,
-        "apiVersions": app.extra["cfg"].api_versions,
-    }
+poetry run pre-commit run --all-files

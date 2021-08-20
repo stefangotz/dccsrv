@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with dccsrv. If not, see <https://www.gnu.org/licenses/>.
 
+from typing import List
+
 from pydantic import BaseSettings
 
 
@@ -34,3 +36,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public
 License along with dccsrv. If not, see <https://www.gnu.org/licenses/>."""
     project_version: str = "0.1.0"
+    api_versions: List[str] = ["v0"]
+    api_key: str
+
+
+CFG = Settings()
+
+
+def get_cfg() -> Settings:
+    return CFG

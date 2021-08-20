@@ -17,16 +17,12 @@
 
 from typing import Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/v0/characters")
 
 
-_FIXED_CHARACTER = {
-    "name": "Mediocre Mel",
-    "user": "Misha",
-    "init": 0,
-}
+_FIXED_CHARACTER = {"name": "Mediocre Mel", "user": "Misha", "init": 0}
 
 
 @router.get("/")

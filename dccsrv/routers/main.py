@@ -25,9 +25,9 @@ router = APIRouter()
 @router.get("/")
 def get_root(cfg: Settings = Depends(get_cfg)):
     return {
-        "name": get_cfg().project_name,
-        "description": get_cfg().project_description,
-        "version": get_cfg().project_version,
-        "license": get_cfg().project_license,
-        "apiVersions": get_cfg().api_versions,
+        "name": cfg.project_name,
+        "description": cfg.project_description,
+        "version": cfg.project_version,
+        "license": cfg.project_license,
+        "apiVersions": cfg.api_versions,
     }

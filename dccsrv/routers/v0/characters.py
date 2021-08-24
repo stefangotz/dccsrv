@@ -15,16 +15,20 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with dccsrv. If not, see <https://www.gnu.org/licenses/>.
 
-from typing import Optional
-
 from fastapi import APIRouter
+from fastapi import Depends
+from fastapi.security.api_key import APIKey
+
+from ...dependencies import get_api_key
 
 router = APIRouter(prefix="/v0/characters")
 
 
-_FIXED_CHARACTER = {"name": "Mediocre Mel", "user": "Misha", "init": 0}
+_FIXED_CHARACTERS = [{"name": "Mediocre Mel", "user": "Misha", "init": 0}]
 
 
 @router.get("/")
-def get_characters(_: Optional[str] = None):
-    return _FIXED_CHARACTER
+def get_characters(
+    api_key: APIKey = Depends(get_api_key),
+):  # pylint: disable=unused-argument
+    return _FIXED_CHARACTERS

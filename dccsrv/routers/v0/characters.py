@@ -17,18 +17,33 @@
 
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi.encoders import jsonable_encoder
 from fastapi.security.api_key import APIKey
+from pydantic import BaseModel
 
 from ...dependencies import get_api_key
 
 router = APIRouter(prefix="/v0/characters")
 
 
-_FIXED_CHARACTERS = [{"name": "Mediocre Mel", "user": "Misha", "init": 0}]
+class Character(BaseModel):
+    name: str
+    user: str
+    init: int = -99
+
+
+_CHARACTERS = {"mediocre_mel": {"name": "Mediocre Mel", "user": "Misha", "init": 0}}
 
 
 @router.get("/")
 def get_characters(
     api_key: APIKey = Depends(get_api_key),
 ):  # pylint: disable=unused-argument
-    return _FIXED_CHARACTERS
+    return _CHARACTERS
+
+
+@router.put("/{cid}", response_model=Character)
+async def update_character(cid: str, character: Character):
+    encoded = jsonable_encoder(character)
+    _CHARACTERS[cid] = encoded
+    return encoded

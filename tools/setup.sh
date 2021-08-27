@@ -23,3 +23,4 @@ cd "$(dirname "$(realpath "${0}")")"/..
 
 python3 -m pip install --user --upgrade poetry || py -m pip install --user --upgrade poetry
 poetry install
+poetry run pre-commit install

@@ -23,6 +23,8 @@ client = TestClient(app)
 
 
 def test_read_main():
-    response = client.get("/v0/characters")
+    response = client.get(
+        "/v0/characters", headers={"access_token": app.extra["cfg"].api_key}
+    )
     assert response.status_code == 200
-    assert response.json() == {"name": "Mediocre Mel", "user": "Misha", "init": 0}
+    assert response.json() == [{"name": "Mediocre Mel", "user": "Misha", "init": 0}]

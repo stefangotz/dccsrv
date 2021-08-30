@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with dccsrv. If not, see <https://www.gnu.org/licenses/>.
 
+import re
+
 from fastapi import Security, HTTPException
 from fastapi.security.api_key import APIKeyQuery, APIKeyCookie, APIKeyHeader
 from starlette.status import HTTP_403_FORBIDDEN
@@ -47,3 +49,7 @@ async def get_api_key(
     raise HTTPException(
         status_code=HTTP_403_FORBIDDEN, detail="Could not validate credentials"
     )
+
+
+def get_character_id(name: str) -> str:
+    return re.sub(r"[^a-zA-Z0-9_]+", "", name).lower()

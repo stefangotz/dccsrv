@@ -15,18 +15,58 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with dccsrv. If not, see <https://www.gnu.org/licenses/>.
 
+import json
+
 from fastapi.testclient import TestClient
+from fastapi import status
 
 from dccsrv.main import app
 
 client = TestClient(app)
 
 
-def test_read_main():
+def test_get_characters():
     response = client.get(
         "/v0/characters", headers={"access_token": app.extra["cfg"].api_key}
     )
     assert response.status_code == 200
     assert response.json() == {
-        "mediocre_mel": {"name": "Mediocre Mel", "user": "Misha", "init": 0}
+        "mediocremel": {"name": "Mediocre Mel", "user": "Misha", "init": 0}
     }
+
+
+def test_get_character():
+    response = client.get(
+        "/v0/characters/mediocremel", headers={"access_token": app.extra["cfg"].api_key}
+    )
+    assert response.status_code == 200
+    assert response.json() == {"name": "Mediocre Mel", "user": "Misha", "init": 0}
+
+
+def test_create_character():
+    character: dict = {"name": "Average Alex", "user": "Avi", "init": 0}
+    response = client.post(
+        "/v0/characters/",
+        headers={"access_token": app.extra["cfg"].api_key},
+        data=json.dumps(character),
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+    assert (
+        response.headers.get("Location")
+        == client.base_url + "/v0/characters/averagealex"
+    )
+
+    response = client.get(
+        "/v0/characters/", headers={"access_token": app.extra["cfg"].api_key}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {
+        "mediocremel": {"name": "Mediocre Mel", "user": "Misha", "init": 0},
+        "averagealex": character,
+    }
+
+    response = client.get(
+        "/v0/characters/averagealex", headers={"access_token": app.extra["cfg"].api_key}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == character
